@@ -3,7 +3,12 @@ import cv2
 import tempfile
 import os
 import numpy as np
+import urllib.request
 
+
+def download_model(path):
+    url = "https://www.dropbox.com/s/dx0qvhhp5hbcx7z/colorization_release_v2.caffemodel?dl=1"
+    urllib.request.urlretrieve(url, path)
 
 def load_network():
     prototxt = r'model/colorization_deploy_v2.prototxt'
@@ -13,7 +18,8 @@ def load_network():
     prototxt = os.path.join(os.path.dirname(__file__), prototxt)
     model = os.path.join(os.path.dirname(__file__), model)
     if not os.path.isfile(model):
-        st.warning("Model wasn't found")
+        download_model(model)
+        print("Model downloaded")
     net = cv2.dnn.readNetFromCaffe(prototxt, model)  # load model from disk
     pts = np.load(points)
 
@@ -26,8 +32,7 @@ def load_network():
     return net
 
 
-def colorize(file_name):
-    net = load_network()
+def colorize(file_name, net):
     image = cv2.imread(file_name)
     scaled = image.astype("float32") / 255.0
     lab = cv2.cvtColor(scaled, cv2.COLOR_BGR2LAB)
@@ -68,6 +73,7 @@ def load_from_st(uploaded_file):
 
 
 def main():
+    net = load_network()
     st.title("Image Colorizer")
     st.subheader("Demo with Streamlit and OpenCV")
     preloaded = ["City", "Dog", "Human"]
@@ -81,7 +87,7 @@ def main():
         file_name = "images/" + mode + ".jpg"
 
     if file_name is not None:
-        image, colorized = colorize(file_name)
+        image, colorized = colorize(file_name, net)
         st.write("Result:")
         first, second = st.beta_columns(2)
         first.image(image, channels='BGR')
