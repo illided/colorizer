@@ -86,12 +86,13 @@ def main():
     elif mode:
         file_name = "images/" + mode + ".jpg"
 
-    if file_name is not None:
-        image, colorized = colorize(file_name, net)
-        st.write("Result:")
-        first, second = st.beta_columns(2)
-        first.image(image, channels='BGR')
-        second.image(colorized, channels='BGR')
+    if st.button("Colorize!") and file_name is not None:
+        with st.spinner("Doing some magick ~~~"):
+            image, colorized = colorize(file_name, net)
+            st.write("Result:")
+            first, second = st.beta_columns(2)
+            first.image(image, channels='BGR')
+            second.image(colorized, channels='BGR')
 
 
 if __name__ == '__main__':
