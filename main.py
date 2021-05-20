@@ -26,11 +26,9 @@ def load_network():
     return net
 
 
-def colorize(uploaded_file):
+def colorize(file_name):
     net = load_network()
-    tfile = tempfile.NamedTemporaryFile(delete=False)
-    tfile.write(uploaded_file.read())
-    image = cv2.imread(tfile.name)
+    image = cv2.imread(file_name)
     scaled = image.astype("float32") / 255.0
     lab = cv2.cvtColor(scaled, cv2.COLOR_BGR2LAB)
 
@@ -63,10 +61,27 @@ def colorize(uploaded_file):
     return image, colorized
 
 
+def load_from_st(uploaded_file):
+    tfile = tempfile.NamedTemporaryFile(delete=False)
+    tfile.write(uploaded_file.read())
+    return tfile.name
+
+
 def main():
-    uploaded_file = st.file_uploader("Upload Files", type=['png', 'jpg', 'jpeg'])
-    if uploaded_file is not None:
-        image, colorized = colorize(uploaded_file)
+    st.title("Image Colorizer")
+    st.subheader("Demo with Streamlit and OpenCV")
+    preloaded = ["City", "Dog", "Human"]
+    mode = st.selectbox("Upload file or choose one:", ["--Upload--", *preloaded])
+    file_name = None
+    if mode == "--Upload--":
+        uploaded_file = st.file_uploader("Upload Files", type=['png', 'jpg', 'jpeg'])
+        if uploaded_file:
+            file_name = load_from_st(uploaded_file)
+    elif mode:
+        file_name = "images/" + mode + ".jpg"
+
+    if file_name is not None:
+        image, colorized = colorize(file_name)
         st.write("Result:")
         first, second = st.beta_columns(2)
         first.image(image, channels='BGR')
