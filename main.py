@@ -87,7 +87,7 @@ def main():
         file_name = "images/" + mode + ".jpg"
 
     if st.button("Colorize!") and file_name is not None:
-        with st.spinner("Doing some magick ~~~"):
+        with st.spinner("Doing some magic ~~~"):
             image, colorized = colorize(file_name, net)
             st.write("Result:")
             first, second = st.beta_columns(2)
