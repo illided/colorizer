@@ -1,3 +1,4 @@
+apt-get update && apt-get install -y python3-opencv
 mkdir -p ~/.streamlit/
 echo "\
 [server]\n\
