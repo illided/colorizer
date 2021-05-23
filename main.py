@@ -10,10 +10,11 @@ def download_model(path):
     url = "https://www.dropbox.com/s/dx0qvhhp5hbcx7z/colorization_release_v2.caffemodel?dl=1"
     urllib.request.urlretrieve(url, path)
 
+
 def load_network():
-    prototxt = r'model/colorization_deploy_v2.prototxt'
-    model = r'model/colorization_release_v2.caffemodel'
-    points = r'model/pts_in_hull.npy'
+    prototxt = r"model/colorization_deploy_v2.prototxt"
+    model = r"model/colorization_release_v2.caffemodel"
+    points = r"model/pts_in_hull.npy"
     points = os.path.join(os.path.dirname(__file__), points)
     prototxt = os.path.join(os.path.dirname(__file__), prototxt)
     model = os.path.join(os.path.dirname(__file__), model)
@@ -80,7 +81,7 @@ def main():
     mode = st.selectbox("Upload file or choose one:", ["--Upload--", *preloaded])
     file_name = None
     if mode == "--Upload--":
-        uploaded_file = st.file_uploader("Upload Files", type=['png', 'jpg', 'jpeg'])
+        uploaded_file = st.file_uploader("Upload Files", type=["png", "jpg", "jpeg"])
         if uploaded_file:
             file_name = load_from_st(uploaded_file)
     elif mode:
@@ -91,9 +92,9 @@ def main():
             image, colorized = colorize(file_name, net)
             st.write("Result:")
             first, second = st.beta_columns(2)
-            first.image(image, channels='BGR')
-            second.image(colorized, channels='BGR')
+            first.image(image, channels="BGR")
+            second.image(colorized, channels="BGR")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
